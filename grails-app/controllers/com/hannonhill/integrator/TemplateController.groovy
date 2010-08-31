@@ -1,6 +1,8 @@
 package com.hannonhill.integrator
 
 class TemplateController {
+	
+	def scaffold = true
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 

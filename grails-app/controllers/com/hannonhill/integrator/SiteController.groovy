@@ -1,7 +1,9 @@
 package com.hannonhill.integrator
 
 class SiteController {
-
+	
+	def scaffold = true
+	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index = {
@@ -21,10 +23,16 @@ class SiteController {
 
     def save = {
         def siteInstance = new Site(params)
-		def template1 = new Template(name: "Homepage")
-		def template2 = new Template(name: "Standard")
+		def template1 = new Template(name: "Homepage", body:"<html><head></head><body><system-region name=\"DEFAULT\"/></body></html>")
+		def template2 = new Template(name: "Standard", body:"<html><head></head><body><system-region name=\"DEFAULT\"/></body></html>")
 		siteInstance.addToTemplates(template1)
 		siteInstance.addToTemplates(template2)
+		
+		//issue the web services calls
+		//TODO Add try...catch block to handle timeouts and connection exceptions		
+		com.hannonhill.www.ws.ns.AssetOperationService.Site site = siteInstance.createRemoteSite()
+		def template1Id = template1.createRemoteTemplate(site)
+		def template2Id = template2.createRemoteTemplate(site)
 		
         if (siteInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'site.label', default: 'Site'), siteInstance.id])}"
