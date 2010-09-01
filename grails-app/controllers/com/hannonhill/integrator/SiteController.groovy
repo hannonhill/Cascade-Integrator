@@ -39,19 +39,20 @@ class SiteController {
 		com.hannonhill.www.ws.ns.AssetOperationService.Template standardTemplate = standardInstance.createRemoteTemplate(site)
 		com.hannonhill.www.ws.ns.AssetOperationService.Template xmlTemplate = xmlInstance.createRemoteTemplate(site)
 		
-		//create page configurations array
+//		improvements:
+//		TODO Create separate domain classes for page configurations
 		
-		//ArrayList<PageConfiguration> configs = new ArrayList()
-		
-		PageConfiguration html = homepageInstance.createPageConfiguration(homepageTemplate, "html", true)
+		PageConfiguration homepageHtml = homepageInstance.createPageConfiguration(homepageTemplate, "html", true)
+		PageConfiguration standardHtml = homepageInstance.createPageConfiguration(standardTemplate, "html", true)
 		PageConfiguration xml = xmlInstance.createPageConfiguration(xmlTemplate, "xml", false)
 		
-		PageConfiguration[] l = [html, xml]
+		PageConfiguration[] l = [homepageHtml, xml]
 		
-		homepageInstance.createPageConfigurationSet(homepageInstance.name, l)
+		homepageInstance.createPageConfigurationSet(homepageInstance.name, l, site)
 		
-//		standardTemplate.createPageConfiguration("html", true)
-//		xmlTemplate.createPageConfiguration("xml", false)
+		PageConfiguration[] m = [standardHtml, xml]
+		
+		standardInstance.createPageConfigurationSet(standardInstance.name, m, site)
 				
         if (siteInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'site.label', default: 'Site'), siteInstance.id])}"
