@@ -25,7 +25,7 @@ class ContentTypeService {
 		
 		Template t = this.createRemoteTemplate()
 		Template tXml = this.createRemoteTemplate(true)
-		pc = [this.createPageConfiguration(t, "html", true), this.createPageConfiguration(t, "xml", true)]
+		pc = [this.createPageConfiguration(t, "html", true), this.createPageConfiguration(tXml, "xml", false)]
 		PageConfigurationSet pcs = this.createPageConfigurationSet(this.ct.name, pc, this.site) 
 	}
 	

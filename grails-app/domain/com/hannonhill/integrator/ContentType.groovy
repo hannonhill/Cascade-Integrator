@@ -9,7 +9,6 @@ class ContentType {
 	static transients = ["body", "authorization", "handler"]
 	
 	String name
-	String wsId
 	
 	//transients
 	String body
