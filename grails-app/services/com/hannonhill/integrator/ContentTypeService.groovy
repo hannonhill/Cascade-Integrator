@@ -10,15 +10,16 @@ import com.hannonhill.www.ws.ns.AssetOperationService.Template
 import com.hannonhill.www.ws.ns.AssetOperationService.ReadResult
 import com.hannonhill.www.ws.ns.AssetOperationService.Identifier
 import com.hannonhill.www.ws.ns.AssetOperationService.EntityTypeString
+import com.hannonhill.www.ws.ns.AssetOperationService.Site as CascadeSite
 
 class ContentTypeService {
 	
 	static transactional = true
 	
-	com.hannonhill.www.ws.ns.AssetOperationService.Site site
+	CascadeSite site
 	ContentType ct
 	
-	void createRemoteContentType(com.hannonhill.www.ws.ns.AssetOperationService.Site site, ContentType ct) {
+	void createRemoteContentType(CascadeSite site, ContentType ct) {
 		this.ct = ct
 		this.site = site
 		PageConfiguration[] pc
