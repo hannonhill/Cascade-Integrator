@@ -63,40 +63,7 @@ class SiteController {
 	
 	def edit = {
 		def siteInstance = Site.get(params.id)
-		if (!siteInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'site.label', default: 'Site'), params.id])}"
-			redirect(action: "list")
-		}
-		else {
-			return [siteInstance: siteInstance]
-		}
-	}
-	
-	def update = {
-		def siteInstance = Site.get(params.id)
-		if (siteInstance) {
-			if (params.version) {
-				def version = params.version.toLong()
-				if (siteInstance.version > version) {
-					
-					siteInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'site.label', default: 'Site')] as Object[], "Another user has updated this Site while you were editing")
-					render(view: "edit", model: [siteInstance: siteInstance])
-					return
-				}
-			}
-			siteInstance.properties = params
-			if (!siteInstance.hasErrors() && siteInstance.save(flush: true)) {
-				flash.message = "${message(code: 'default.updated.message', args: [message(code: 'site.label', default: 'Site'), siteInstance.id])}"
-				redirect(action: "show", id: siteInstance.id)
-			}
-			else {
-				render(view: "edit", model: [siteInstance: siteInstance])
-			}
-		}
-		else {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'site.label', default: 'Site'), params.id])}"
-			redirect(action: "list")
-		}
+		redirect(action: "show", params:[id: siteInstance.id])
 	}
 	
 	def delete = {
