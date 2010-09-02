@@ -1,5 +1,7 @@
 package com.hannonhill.integrator
 
+import com.hannonhill.www.ws.ns.AssetOperationService.Site as CascadeSite
+
 class SiteController {
 	
 	def scaffold = true
@@ -30,7 +32,7 @@ class SiteController {
 		
 		//create site, templates, page configurations, config sets, content types, homepage and standard page base asset
 		//TODO Add try...catch block to handle timeouts and connection exceptions		
-		com.hannonhill.www.ws.ns.AssetOperationService.Site site = siteInstance.createRemoteSite()
+		CascadeSite site = siteInstance.createRemoteSite()
 		homepageInstance.createRemoteContentType(site)
 		standardInstance.createRemoteContentType(site)
 				

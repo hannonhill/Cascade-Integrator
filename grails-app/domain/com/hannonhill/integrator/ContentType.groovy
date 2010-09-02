@@ -1,5 +1,7 @@
 package com.hannonhill.integrator
 
+import com.hannonhill.www.ws.ns.AssetOperationService.Site as CascadeSite
+
 class ContentType {
 	
 	def authenticationService
@@ -28,7 +30,7 @@ class ContentType {
 		wsId(nullable: true)
 	}
 	
-	void createRemoteContentType(com.hannonhill.www.ws.ns.AssetOperationService.Site site) {
+	void createRemoteContentType(CascadeSite site) {
 		this.setBody()
 		this.setUpWS()
 		contentTypeService.createRemoteContentType(site, this)
