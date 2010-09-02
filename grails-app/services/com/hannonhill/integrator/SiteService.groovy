@@ -25,9 +25,9 @@ class SiteService {
 		Asset asset = new Asset()
 		asset.setSite(site)
 		
-		String wsId = this.localSite.handler.create(this.localSite.authorization, asset).getCreatedAssetId()
+		this.localSite.wsId = this.localSite.handler.create(this.localSite.authorization, asset).getCreatedAssetId()
 		
-		CascadeSite remoteSite = this.readRemoteSite(wsId)
+		CascadeSite remoteSite = this.readRemoteSite(this.localSite.wsId)
 		
 		return remoteSite
 	}
