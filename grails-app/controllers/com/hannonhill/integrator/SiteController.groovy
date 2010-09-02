@@ -1,7 +1,5 @@
 package com.hannonhill.integrator
 
-import com.hannonhill.www.ws.ns.AssetOperationService.PageConfiguration
-
 class SiteController {
 	
 	def scaffold = true
@@ -25,34 +23,16 @@ class SiteController {
 
     def save = {
         def siteInstance = new Site(params)
-		def homepageInstance = new Template(name: "Homepage", body:"<html><head></head><body><system-region name=\"DEFAULT\"/></body></html>")
-		def standardInstance = new Template(name: "Standard", body:"<html><head></head><body><system-region name=\"DEFAULT\"/></body></html>")
-		def xmlInstance = new Template(name: "XML", body:"<system-region name=\"DEFAULT\"/>")
-		siteInstance.addToTemplates(homepageInstance)
-		siteInstance.addToTemplates(standardInstance)
-		siteInstance.addToTemplates(xmlInstance)
+		def homepageInstance = new ContentType(name: "Homepage")
+		def standardInstance = new ContentType(name: "Standard")
+		siteInstance.addToContentTypes(homepageInstance)
+		siteInstance.addToContentTypes(standardInstance)
 		
 		//create site, templates, page configurations, config sets, content types, homepage and standard page base asset
 		//TODO Add try...catch block to handle timeouts and connection exceptions		
 		com.hannonhill.www.ws.ns.AssetOperationService.Site site = siteInstance.createRemoteSite()
-		com.hannonhill.www.ws.ns.AssetOperationService.Template homepageTemplate = homepageInstance.createRemoteTemplate(site)
-		com.hannonhill.www.ws.ns.AssetOperationService.Template standardTemplate = standardInstance.createRemoteTemplate(site)
-		com.hannonhill.www.ws.ns.AssetOperationService.Template xmlTemplate = xmlInstance.createRemoteTemplate(site)
-		
-//		improvements:
-//		TODO Create separate domain classes for page configurations
-		
-		PageConfiguration homepageHtml = homepageInstance.createPageConfiguration(homepageTemplate, "html", true)
-		PageConfiguration standardHtml = homepageInstance.createPageConfiguration(standardTemplate, "html", true)
-		PageConfiguration xml = xmlInstance.createPageConfiguration(xmlTemplate, "xml", false)
-		
-		PageConfiguration[] l = [homepageHtml, xml]
-		
-		homepageInstance.createPageConfigurationSet(homepageInstance.name, l, site)
-		
-		PageConfiguration[] m = [standardHtml, xml]
-		
-		standardInstance.createPageConfigurationSet(standardInstance.name, m, site)
+		homepageInstance.createRemoteContentType(site)
+		standardInstance.createRemoteContentType(site)
 				
         if (siteInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'site.label', default: 'Site'), siteInstance.id])}"

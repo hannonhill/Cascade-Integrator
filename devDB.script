@@ -7,7 +7,7 @@ CREATE USER SA PASSWORD ""
 GRANT DBA TO SA
 SET WRITE_DELAY 10
 SET SCHEMA PUBLIC
-INSERT INTO SITE VALUES(1,0,'dk4','ce9918ab0a00016b01e5e323554dc73f')
-INSERT INTO TEMPLATE VALUES(1,0,'<html><head></head><body><system-region name="DEFAULT"/></body></html>','Standard',1,'ce991a340a00016b01e5e3236764a752')
-INSERT INTO TEMPLATE VALUES(2,0,'<html><head></head><body><system-region name="DEFAULT"/></body></html>','Homepage',1,'ce9919b80a00016b01e5e32357d2b5e3')
-INSERT INTO TEMPLATE VALUES(3,0,'<system-region name="DEFAULT"/>','XML',1,'ce991aab0a00016b01e5e32328c77923')
+INSERT INTO SITE VALUES(1,0,'dk','ce9f5a170a00016b01e5e3239a83072d')
+INSERT INTO TEMPLATE VALUES(1,0,'<system-region name="DEFAULT"/>','XML',1,'ce9f5c3a0a00016b01e5e323e81d1a19')
+INSERT INTO TEMPLATE VALUES(2,0,'<html><head></head><body><system-region name="DEFAULT"/></body></html>','Homepage',1,'ce9f5b2f0a00016b01e5e32383d45fb7')
+INSERT INTO TEMPLATE VALUES(3,0,'<html><head></head><body><system-region name="DEFAULT"/></body></html>','Standard',1,'ce9f5bbc0a00016b01e5e32335264ca3')

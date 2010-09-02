@@ -12,7 +12,7 @@ class Site {
 	
 	def authenticationService
 	
-	static hasMany = [templates: Template]
+	static hasMany = [contentTypes: ContentType]
 	
 	String name
 	String wsId
