@@ -40,6 +40,7 @@ class SiteController {
 		//		TODO create _internal folder tree
 		//		TODO create templates in _internal/templates folder
 		//		TODO create Scaffold domain type for folders, index pages
+		//      TODO provide for .jar files that can be dropped in and consumed for creating default XSLT and Velocity formats
 		
 		if (siteInstance.save(flush: true)) {
 			flash.message = "${message(code: 'default.created.message', args: [message(code: 'site.label', default: 'Site'), siteInstance.id])}"

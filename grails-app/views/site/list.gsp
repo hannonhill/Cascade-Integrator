@@ -18,22 +18,13 @@
             <div class="message">${flash.message}</div>
             </g:if>
             <div class="list">
-                <table>
-                    <thead>
-                        <tr>                        
-                            <g:sortableColumn property="name" title="${message(code: 'site.name.label', default: 'Name')}" />
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <g:each in="${siteInstanceList}" status="i" var="siteInstance">
-                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">                        
-                            <td><g:link action="show" id="${siteInstance.id}">${fieldValue(bean: siteInstance, field: "name")}</g:link></td>
-                        </tr>
-                    </g:each>
-                    </tbody>
-                </table>
+                <g:each in="${siteInstanceList}" status="i" var="siteInstance">
+                	<p><g:link action="show" id="${siteInstance.id}"><span style="font-size: 2em; text-decoration: underline">${fieldValue(bean: siteInstance, field: "name")}</span></g:link></p>
+                </g:each>
             </div>
-            <div class="paginateButtons">
+            <br/><br/>
+            <!-- <div class="paginateButtons"> -->
+            <div>
                 <g:paginate total="${siteInstanceTotal}" />
             </div>
         </div>

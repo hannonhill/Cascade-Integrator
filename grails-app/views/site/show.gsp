@@ -10,7 +10,6 @@
     <body>
         <div class="nav">
             <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
-            <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
             <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
         </div>
         <div class="body">
@@ -50,7 +49,7 @@
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
                                 <g:each in="${siteInstance.contentTypes}" var="c">
-                                    <li><g:link controller="contentType" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></li>
+                                    <li>${c?.encodeAsHTML()}</li>
                                 </g:each>
                                 </ul>
                             </td>
