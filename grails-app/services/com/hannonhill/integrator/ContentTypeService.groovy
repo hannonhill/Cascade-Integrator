@@ -1,6 +1,7 @@
 package com.hannonhill.integrator
 
 import com.hannonhill.www.ws.ns.AssetOperationService.PageConfiguration;
+import com.hannonhill.www.ws.ns.AssetOperationService.Page;
 import com.hannonhill.www.ws.ns.AssetOperationService.PageConfigurationSet;
 import com.hannonhill.www.ws.ns.AssetOperationService.CreateResult
 import com.hannonhill.www.ws.ns.AssetOperationService.Asset
@@ -28,8 +29,9 @@ class ContentTypeService {
 		Template t = this.createRemoteTemplate()
 		Template tXml = this.createRemoteTemplate(true)
 		pc = [this.createPageConfiguration(t, "html", true), this.createPageConfiguration(tXml, "xml", false)]
-		PageConfigurationSet pcs = this.createPageConfigurationSet(this.ct.name, pc, this.site)
-		CascadeContentType cct = this.createRemoteContentType(pcs, this.site)
+		PageConfigurationSet pcs = this.createPageConfigurationSet(this.ct.name, pc)
+		CascadeContentType cct = this.createRemoteContentType(pcs)
+		Page p = this.createRemoteBaseAsset(cct)
 	}
 	
 	private Template prepareRemoteTemplate() {
@@ -135,10 +137,10 @@ class ContentTypeService {
 		return config
 	}
 	
-	private PageConfigurationSet createPageConfigurationSet(String name, PageConfiguration[] configs, com.hannonhill.www.ws.ns.AssetOperationService.Site site) {
+	private PageConfigurationSet createPageConfigurationSet(String name, PageConfiguration[] configs) {
 		PageConfigurationSet configSet = new PageConfigurationSet()
 		configSet.setName(name)
-		configSet.setSiteId(site.getId())
+		configSet.setSiteId(this.site.getId())
 		configSet.setParentContainerPath("/")
 		configSet.setPageConfigurations(configs)
 		
@@ -152,12 +154,12 @@ class ContentTypeService {
 		return remotePageConfigurationSet
 	}
 	
-	private CascadeContentType createRemoteContentType(PageConfigurationSet pcs, CascadeSite site) {
+	private CascadeContentType createRemoteContentType(PageConfigurationSet pcs) {
 		CascadeContentType cct = new CascadeContentType()
 		cct.setName(this.ct.name)
 		cct.setPageConfigurationSetId(pcs.getId())
 		cct.setSiteId(site.getId())
-		cct.setMetadataSetId(site.getDefaultMetadataSetId())
+		cct.setMetadataSetId(this.site.getDefaultMetadataSetId())
 		cct.setParentContainerPath("/")
 		
 		Asset asset = new Asset()
@@ -168,5 +170,25 @@ class ContentTypeService {
 		CascadeContentType remoteContentType = this.readRemoteContentType(wsId)
 		
 		return remoteContentType
+	}
+	
+	private Page createRemoteBaseAsset(CascadeContentType cct) {
+		Page page = new Page()
+		page.setName(this.ct.name)
+		page.setParentFolderPath("/")
+		page.setSiteId(this.site.getId())
+		page.setContentTypeId(cct.getId())
+		page.setXhtml("My default page content.")
+		
+		Asset asset = new Asset()
+		asset.setPage(page)
+		
+		def wsId = this.ct.handler.create(this.ct.authorization, asset).getCreatedAssetId()
+		
+		//CascadeContentType remoteContentType = this.readRemoteContentType(wsId)
+		
+		
+		//returns the local Page object instead of a remote one
+		return page
 	}
 }
