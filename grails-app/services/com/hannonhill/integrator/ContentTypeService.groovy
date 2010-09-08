@@ -11,6 +11,7 @@ import com.hannonhill.www.ws.ns.AssetOperationService.ReadResult
 import com.hannonhill.www.ws.ns.AssetOperationService.Identifier
 import com.hannonhill.www.ws.ns.AssetOperationService.EntityTypeString
 import com.hannonhill.www.ws.ns.AssetOperationService.Site as CascadeSite
+import com.hannonhill.www.ws.ns.AssetOperationService.ContentType as CascadeContentType
 
 class ContentTypeService {
 	
@@ -27,7 +28,8 @@ class ContentTypeService {
 		Template t = this.createRemoteTemplate()
 		Template tXml = this.createRemoteTemplate(true)
 		pc = [this.createPageConfiguration(t, "html", true), this.createPageConfiguration(tXml, "xml", false)]
-		PageConfigurationSet pcs = this.createPageConfigurationSet(this.ct.name, pc, this.site) 
+		PageConfigurationSet pcs = this.createPageConfigurationSet(this.ct.name, pc, this.site)
+		CascadeContentType cct = this.createRemoteContentType(pcs, this.site)
 	}
 	
 	private Template prepareRemoteTemplate() {
@@ -83,6 +85,36 @@ class ContentTypeService {
 		return t
 	}
 	
+	private PageConfigurationSet readRemotePageConfigurationSet(String id) {
+		Identifier toRead = new Identifier();
+		toRead.setId(id);
+		toRead.setType(EntityTypeString.pageconfigurationset);
+		
+		Read read = new Read();
+		read.setIdentifier(toRead);
+		
+		ReadResult result = this.ct.handler.read(this.ct.authorization, toRead);
+		Asset a = result.getAsset()
+		PageConfigurationSet pcs = a.getPageConfigurationSet()
+		
+		return pcs
+	}
+	
+	private CascadeContentType readRemoteContentType(String id) {
+		Identifier toRead = new Identifier();
+		toRead.setId(id);
+		toRead.setType(EntityTypeString.contenttype);
+		
+		Read read = new Read();
+		read.setIdentifier(toRead);
+		
+		ReadResult result = this.ct.handler.read(this.ct.authorization, toRead);
+		Asset a = result.getAsset()
+		CascadeContentType cct = a.getContentType()
+		
+		return cct
+	}
+	
 	private PageConfiguration createPageConfiguration(Template template, String type, boolean defaultConfig) {
 		PageConfiguration config = new PageConfiguration()
 		config.setOutputExtension("." + type.toLowerCase())
@@ -113,8 +145,28 @@ class ContentTypeService {
 		Asset asset = new Asset()
 		asset.setPageConfigurationSet(configSet)
 		
-		def configSetId = this.ct.handler.create(this.ct.authorization, asset)
+		String wsId = this.ct.handler.create(this.ct.authorization, asset).getCreatedAssetId()
 		
-		return configSet
+		PageConfigurationSet remotePageConfigurationSet = this.readRemotePageConfigurationSet(wsId)
+		
+		return remotePageConfigurationSet
+	}
+	
+	private CascadeContentType createRemoteContentType(PageConfigurationSet pcs, CascadeSite site) {
+		CascadeContentType cct = new CascadeContentType()
+		cct.setName(this.ct.name)
+		cct.setPageConfigurationSetId(pcs.getId())
+		cct.setSiteId(site.getId())
+		cct.setMetadataSetId(site.getDefaultMetadataSetId())
+		cct.setParentContainerPath("/")
+		
+		Asset asset = new Asset()
+		asset.setContentType(cct)
+		
+		String wsId = this.ct.handler.create(this.ct.authorization, asset).getCreatedAssetId()
+		
+		CascadeContentType remoteContentType = this.readRemoteContentType(wsId)
+		
+		return remoteContentType
 	}
 }

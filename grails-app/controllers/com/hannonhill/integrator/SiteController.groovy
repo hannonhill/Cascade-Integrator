@@ -36,7 +36,7 @@ class SiteController {
 		homepageInstance.createRemoteContentType(site)
 		standardInstance.createRemoteContentType(site)
 		
-		//		TODO create CMS Content Type objects in ContentTypeService
+		//      TODO create base assets for homepage and standard
 		//		TODO create _internal folder tree
 		//		TODO create templates in _internal/templates folder
 		//		TODO create Scaffold domain type for folders, index pages
