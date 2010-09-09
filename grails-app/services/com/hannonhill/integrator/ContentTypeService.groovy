@@ -1,10 +1,13 @@
 package com.hannonhill.integrator
 
-import com.hannonhill.www.ws.ns.AssetOperationService.PageConfiguration;
-import com.hannonhill.www.ws.ns.AssetOperationService.Page;
-import com.hannonhill.www.ws.ns.AssetOperationService.PageConfigurationSet;
+import com.hannonhill.www.ws.ns.AssetOperationService.PageConfiguration
+import com.hannonhill.www.ws.ns.AssetOperationService.Page
+import com.hannonhill.www.ws.ns.AssetOperationService.PageConfigurationSet
 import com.hannonhill.www.ws.ns.AssetOperationService.CreateResult
 import com.hannonhill.www.ws.ns.AssetOperationService.Asset
+import com.hannonhill.www.ws.ns.AssetOperationService.AssetFactory
+import com.hannonhill.www.ws.ns.AssetOperationService.AssetFactoryContainer
+import com.hannonhill.www.ws.ns.AssetOperationService.AssetFactoryWorkflowMode
 import com.hannonhill.www.ws.ns.AssetOperationService.SerializationType
 import com.hannonhill.www.ws.ns.AssetOperationService.Read
 import com.hannonhill.www.ws.ns.AssetOperationService.Template
@@ -20,6 +23,7 @@ class ContentTypeService {
 	
 	CascadeSite site
 	ContentType ct
+	AssetFactoryContainer assetFactoryContainer
 	
 	void createRemoteContentType(CascadeSite site, ContentType ct) {
 		this.ct = ct
@@ -32,6 +36,7 @@ class ContentTypeService {
 		PageConfigurationSet pcs = this.createPageConfigurationSet(this.ct.name, pc)
 		CascadeContentType cct = this.createRemoteContentType(pcs)
 		Page p = this.createRemoteBaseAsset(cct)
+		AssetFactory af = this.createRemoteAssetFactory(p)
 	}
 	
 	private Template prepareRemoteTemplate() {
@@ -73,48 +78,62 @@ class ContentTypeService {
 	}
 	
 	private Template readRemoteTemplate(String id) {
-		Identifier toRead = new Identifier();
-		toRead.setId(id);
-		toRead.setType(EntityTypeString.template);
 		
-		Read read = new Read();
-		read.setIdentifier(toRead);
+		Asset a = readRemoteAsset(id, EntityTypeString.template)
 		
-		ReadResult result = this.ct.handler.read(this.ct.authorization, toRead);
-		Asset a = result.getAsset()
 		Template t = a.getTemplate()
 		
 		return t
 	}
 	
 	private PageConfigurationSet readRemotePageConfigurationSet(String id) {
-		Identifier toRead = new Identifier();
-		toRead.setId(id);
-		toRead.setType(EntityTypeString.pageconfigurationset);
 		
-		Read read = new Read();
-		read.setIdentifier(toRead);
+		Asset a = readRemoteAsset(id, EntityTypeString.pageconfigurationset)
 		
-		ReadResult result = this.ct.handler.read(this.ct.authorization, toRead);
-		Asset a = result.getAsset()
 		PageConfigurationSet pcs = a.getPageConfigurationSet()
 		
 		return pcs
 	}
 	
 	private CascadeContentType readRemoteContentType(String id) {
+		
+		Asset a = readRemoteAsset(id, EntityTypeString.contenttype)
+		
+		CascadeContentType cct = a.getContentType()
+		
+		return cct
+	}
+	
+	private Page readRemotePage(String id) {
+		
+		Asset a = readRemoteAsset(id, EntityTypeString.page)
+		
+		Page p = a.getPage()
+		
+		return p
+	}
+	
+	private AssetFactoryContainer readRemoteAssetFactoryContainer(String id) {
+		
+		Asset a = readRemoteAsset(id, EntityTypeString.assetfactorycontainer)
+		
+		AssetFactoryContainer afc = a.getAssetFactoryContainer()
+		
+		return afc
+	}
+	
+	private Asset readRemoteAsset(String id, EntityTypeString type) {
 		Identifier toRead = new Identifier();
 		toRead.setId(id);
-		toRead.setType(EntityTypeString.contenttype);
+		toRead.setType(type);
 		
 		Read read = new Read();
 		read.setIdentifier(toRead);
 		
 		ReadResult result = this.ct.handler.read(this.ct.authorization, toRead);
 		Asset a = result.getAsset()
-		CascadeContentType cct = a.getContentType()
 		
-		return cct
+		return a
 	}
 	
 	private PageConfiguration createPageConfiguration(Template template, String type, boolean defaultConfig) {
@@ -185,10 +204,55 @@ class ContentTypeService {
 		
 		def wsId = this.ct.handler.create(this.ct.authorization, asset).getCreatedAssetId()
 		
-		//CascadeContentType remoteContentType = this.readRemoteContentType(wsId)
+		Page remotePage = this.readRemotePage(wsId)
+		
+		return remotePage
+	}
+	
+	private void createAssetFactoryContainer() {
+		AssetFactoryContainer afc = new AssetFactoryContainer()
+		afc.setName(this.site.getName())
+		afc.setSiteId(this.site.getId())
+		afc.setParentContainerPath("/")
+		afc.setApplicableGroups("")
+		
+		Asset asset = new Asset()
+		asset.setAssetFactoryContainer(afc)
+		
+		def wsId = this.ct.handler.create(this.ct.authorization, asset).getCreatedAssetId()
+		
+		AssetFactoryContainer remoteAfc = this.readRemoteAssetFactoryContainer(wsId)
+		
+		this.assetFactoryContainer = remoteAfc
+		
+	}
+	
+	private AssetFactory createRemoteAssetFactory(Page p) {
+		AssetFactory af = new AssetFactory()
+				
+		af.setName(this.ct.name)
+		
+		if(this.assetFactoryContainer != null) {
+			af.setParentContainerPath(this.assetFactoryContainer.getPath())
+		}
+		else {
+			createAssetFactoryContainer()
+			af.setParentContainerPath(this.assetFactoryContainer.getPath())
+		}
 		
 		
-		//returns the local Page object instead of a remote one
-		return page
+		af.setAssetType("page")
+		af.setWorkflowMode(new AssetFactoryWorkflowMode().value1)
+		af.setSiteId(this.site.getId())
+		af.setBaseAssetId(p.getId())
+		af.setApplicableGroups("")
+		
+		Asset asset = new Asset()
+		asset.setAssetFactory(af)
+		
+		def wsId = this.ct.handler.create(this.ct.authorization, asset).getCreatedAssetId()		
+		
+		//returns the local AssetFactory object instead of a remote one
+		return af
 	}
 }
