@@ -10,10 +10,11 @@ class Site {
 	def authorization
 	def handler
 	
-	static hasMany = [contentTypes: ContentType]
+	static hasMany = [contentTypes: ContentType, folders: Folder]
 	
 	String name
 	String wsId
+	InternalCmsAssets internalCmsAssets
 	
 	String toString() {
 		"$name"
@@ -21,6 +22,7 @@ class Site {
 	
 	static constraints = {
 		wsId(nullable: true)
+		internalCmsAssets(nullable: true)
 	}
 	
 	void setUpWS() {
