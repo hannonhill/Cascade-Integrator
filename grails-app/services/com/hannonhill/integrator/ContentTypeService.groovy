@@ -16,6 +16,7 @@ import com.hannonhill.www.ws.ns.AssetOperationService.Identifier
 import com.hannonhill.www.ws.ns.AssetOperationService.EntityTypeString
 import com.hannonhill.www.ws.ns.AssetOperationService.Site as CascadeSite
 import com.hannonhill.www.ws.ns.AssetOperationService.ContentType as CascadeContentType
+import com.hannonhill.www.ws.ns.AssetOperationService.Folder as CascadeFolder
 
 class ContentTypeService {
 	
@@ -24,25 +25,38 @@ class ContentTypeService {
 	CascadeSite site
 	ContentType ct
 	AssetFactoryContainer assetFactoryContainer
+	CascadeFolder[] folders
 	
-	void createRemoteContentType(CascadeSite site, ContentType ct) {
+	void createRemoteContentType(CascadeSite site, ContentType ct, CascadeFolder[] folders) {
 		this.ct = ct
 		this.site = site
+		this.folders = folders
 		PageConfiguration[] pc
 		
 		Template t = this.createRemoteTemplate()
 		Template tXml = this.createRemoteTemplate(true)
-		pc = [this.createPageConfiguration(t, "html", true), this.createPageConfiguration(tXml, "xml", false)]
+		pc = [
+			this.createPageConfiguration(t, "html", true),
+			this.createPageConfiguration(tXml, "xml", false)
+		]
 		PageConfigurationSet pcs = this.createPageConfigurationSet(this.ct.name, pc)
 		CascadeContentType cct = this.createRemoteContentType(pcs)
-		Page p = this.createRemoteBaseAsset(cct)
-		AssetFactory af = this.createRemoteAssetFactory(p)
+		
+		int index = cct.getName().toLowerCase().indexOf("homepage")
+		
+		if(index < 0) {
+			Page p = this.createRemoteBaseAsset(cct)
+			AssetFactory af = this.createRemoteAssetFactory(p)
+		}
+		else {
+			Page p = this.createRemotePage(cct, "index", this.site.getRootFolderId())
+		}
 	}
 	
 	private Template prepareRemoteTemplate() {
 		Template template = new Template()
 		template.setSiteName(this.site.getName())
-		template.setParentFolderId(this.site.getRootFolderId())
+		template.setParentFolderId(this.folders[1].getId())
 		
 		return template
 	}
@@ -65,7 +79,7 @@ class ContentTypeService {
 	private Template createRemoteTemplate(boolean isXml) {
 		Template template = prepareRemoteTemplate()
 		template.setName(this.ct.name + "XML")
-		template.setXml("<system-region name=\"DEFAULT\"/>")
+		template.setXml("<xml><system-region name=\"DEFAULT\"/></xml>")
 		
 		Asset asset = new Asset()
 		asset.setTemplate(template)
@@ -79,7 +93,7 @@ class ContentTypeService {
 	
 	private Template readRemoteTemplate(String id) {
 		
-		Asset a = readRemoteAsset(id, EntityTypeString.template)
+		Asset a = this.readRemoteAsset(id, EntityTypeString.template)
 		
 		Template t = a.getTemplate()
 		
@@ -88,7 +102,7 @@ class ContentTypeService {
 	
 	private PageConfigurationSet readRemotePageConfigurationSet(String id) {
 		
-		Asset a = readRemoteAsset(id, EntityTypeString.pageconfigurationset)
+		Asset a = this.readRemoteAsset(id, EntityTypeString.pageconfigurationset)
 		
 		PageConfigurationSet pcs = a.getPageConfigurationSet()
 		
@@ -97,7 +111,7 @@ class ContentTypeService {
 	
 	private CascadeContentType readRemoteContentType(String id) {
 		
-		Asset a = readRemoteAsset(id, EntityTypeString.contenttype)
+		Asset a = this.readRemoteAsset(id, EntityTypeString.contenttype)
 		
 		CascadeContentType cct = a.getContentType()
 		
@@ -106,7 +120,7 @@ class ContentTypeService {
 	
 	private Page readRemotePage(String id) {
 		
-		Asset a = readRemoteAsset(id, EntityTypeString.page)
+		Asset a = this.readRemoteAsset(id, EntityTypeString.page)
 		
 		Page p = a.getPage()
 		
@@ -115,7 +129,7 @@ class ContentTypeService {
 	
 	private AssetFactoryContainer readRemoteAssetFactoryContainer(String id) {
 		
-		Asset a = readRemoteAsset(id, EntityTypeString.assetfactorycontainer)
+		Asset a = this.readRemoteAsset(id, EntityTypeString.assetfactorycontainer)
 		
 		AssetFactoryContainer afc = a.getAssetFactoryContainer()
 		
@@ -194,7 +208,7 @@ class ContentTypeService {
 	private Page createRemoteBaseAsset(CascadeContentType cct) {
 		Page page = new Page()
 		page.setName(this.ct.name)
-		page.setParentFolderPath("/")
+		page.setParentFolderId(this.folders[2].getId())
 		page.setSiteId(this.site.getId())
 		page.setContentTypeId(cct.getId())
 		page.setXhtml("My default page content.")
@@ -208,6 +222,24 @@ class ContentTypeService {
 		
 		return remotePage
 	}
+	
+	private Page createRemotePage(CascadeContentType cct, String name, String parentFolderId) {
+		Page page = new Page()
+		page.setName(name)
+		page.setParentFolderId(parentFolderId)
+		page.setSiteId(this.site.getId())
+		page.setContentTypeId(cct.getId())
+		page.setXhtml("My default page content.")
+		
+		Asset asset = new Asset()
+		asset.setPage(page)
+		
+		def wsId = this.ct.handler.create(this.ct.authorization, asset).getCreatedAssetId()
+		
+		Page remotePage = this.readRemotePage(wsId)
+		
+		return remotePage
+	} 
 	
 	private void createAssetFactoryContainer() {
 		AssetFactoryContainer afc = new AssetFactoryContainer()
@@ -224,12 +256,11 @@ class ContentTypeService {
 		AssetFactoryContainer remoteAfc = this.readRemoteAssetFactoryContainer(wsId)
 		
 		this.assetFactoryContainer = remoteAfc
-		
 	}
 	
 	private AssetFactory createRemoteAssetFactory(Page p) {
 		AssetFactory af = new AssetFactory()
-				
+		
 		af.setName(this.ct.name)
 		
 		if(this.assetFactoryContainer != null) {
