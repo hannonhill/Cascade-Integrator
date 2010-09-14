@@ -2,6 +2,7 @@ package com.hannonhill.integrator
 
 import com.hannonhill.www.ws.ns.AssetOperationService.Site as CascadeSite
 import com.hannonhill.www.ws.ns.AssetOperationService.Folder as CascadeFolder
+import com.hannonhill.www.ws.ns.AssetOperationService.ContentType as CascadeContentType
 
 class SiteController {
 	
@@ -38,13 +39,13 @@ class SiteController {
 		CascadeSite site = siteInstance.createRemoteSite()
 		CascadeFolder[] internalFolder = internalFolderInstance.createRemoteFolder(site, site.getRootFolderId())
 
-		homepageInstance.createRemoteContentType(site, internalFolder)
-		standardInstance.createRemoteContentType(site, internalFolder)
+		CascadeContentType homepage = homepageInstance.createRemoteContentType(site, internalFolder)
+		CascadeContentType standard = standardInstance.createRemoteContentType(site, internalFolder)
 		
 		siteInstance.folders.each() {
 			def folderInstance = new Folder(name: it.name)
-			folderInstance.createRemoteFolder(site, site.getRootFolderId())
-			
+			def folder = folderInstance.createRemoteFolder(site, site.getRootFolderId())
+			standardInstance.createRemotePage(standard, 'index', folder[0].getId())
 		}
 		//adding this one since it's a special kind of folder
 		siteInstance.addToFolders(internalFolderInstance)

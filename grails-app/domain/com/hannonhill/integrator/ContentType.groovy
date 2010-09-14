@@ -2,6 +2,8 @@ package com.hannonhill.integrator
 
 import com.hannonhill.www.ws.ns.AssetOperationService.Site as CascadeSite
 import com.hannonhill.www.ws.ns.AssetOperationService.Folder as CascadeFolder
+import com.hannonhill.www.ws.ns.AssetOperationService.ContentType as CascadeContentType
+import com.hannonhill.www.ws.ns.AssetOperationService.Page
 
 class ContentType {
 	
@@ -31,10 +33,16 @@ class ContentType {
 		wsId(nullable: true)
 	}
 	
-	void createRemoteContentType(CascadeSite site, CascadeFolder[] folders) {
+	CascadeContentType createRemoteContentType(CascadeSite site, CascadeFolder[] folders) {
 		this.setBody()
 		this.setUpWS()
-		contentTypeService.createRemoteContentType(site, this, folders)
+		CascadeContentType cct = contentTypeService.createRemoteContentType(site, this, folders)
+		return cct
+	}
+	
+	Page createRemotePage(CascadeContentType cct, String name, String parentFolderId) {
+		Page p = contentTypeService.createRemotePage(cct, name, parentFolderId)
+		return p
 	}
 	
 	void setBody() {

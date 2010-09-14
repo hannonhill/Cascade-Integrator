@@ -27,7 +27,7 @@ class ContentTypeService {
 	AssetFactoryContainer assetFactoryContainer
 	CascadeFolder[] folders
 	
-	void createRemoteContentType(CascadeSite site, ContentType ct, CascadeFolder[] folders) {
+	CascadeContentType createRemoteContentType(CascadeSite site, ContentType ct, CascadeFolder[] folders) {
 		this.ct = ct
 		this.site = site
 		this.folders = folders
@@ -51,6 +51,8 @@ class ContentTypeService {
 		else {
 			Page p = this.createRemotePage(cct, "index", this.site.getRootFolderId())
 		}
+		
+		return cct
 	}
 	
 	private Template prepareRemoteTemplate() {
