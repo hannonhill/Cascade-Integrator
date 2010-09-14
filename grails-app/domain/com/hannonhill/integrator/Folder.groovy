@@ -32,7 +32,7 @@ class Folder {
 	
 	protected CascadeFolder[] createRemoteFolder(CascadeSite site, String parentFolder) {
 		this.setUpWS()
-		Folder folder = folderService.createRemoteFolder(site, this, parentFolder)
+		CascadeFolder folder = folderService.createRemoteFolder(site, this, parentFolder)
 		return folder
 	}
 }

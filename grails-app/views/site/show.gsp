@@ -44,11 +44,16 @@
                                                
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="site.contentTypes.label" default="Content Types" /></td>
+                            <td valign="top" class="name"><g:message code="site.contentTypes.label" default="Content Types & Folders" /></td>
                             
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
                                 <g:each in="${siteInstance.contentTypes}" var="c">
+                                    <li>${c?.encodeAsHTML()}</li>
+                                </g:each>
+                                </ul>
+                                <ul>
+                                <g:each in="${siteInstance.folders}" var="c">
                                     <li>${c?.encodeAsHTML()}</li>
                                 </g:each>
                                 </ul>

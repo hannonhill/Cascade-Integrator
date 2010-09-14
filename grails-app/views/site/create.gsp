@@ -7,6 +7,17 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'site.label', default: 'Site')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
+         <script type="text/javascript">
+			var i = 0;
+        
+        	function addFolder() {
+				var input = new Element("input", {name : "folders[" + i + "].name", type : "text", style : "display: block"});
+				$("newfolders").insert ({
+					"bottom" : 	input
+				} );
+				i++;
+        	}
+        </script>
     </head>
     <body>
         <div class="nav">
@@ -39,6 +50,9 @@
                         
                         </tbody>
                     </table>
+                    <div id="newfolders">
+                    	<input type="button" value="Add Folder" onclick="addFolder();" />
+                    </div>
                 </div>
                 <div class="buttons">
                     <span class="button"><g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>

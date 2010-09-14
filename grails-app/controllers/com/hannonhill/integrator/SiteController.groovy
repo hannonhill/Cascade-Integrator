@@ -25,20 +25,29 @@ class SiteController {
 	}
 	
 	def save = {
+		def test = params
 		def siteInstance = new Site(params)
 		def internalFolderInstance = new InternalCmsAssets(name: "_internal")
 		def homepageInstance = new ContentType(name: "Homepage")
 		def standardInstance = new ContentType(name: "Standard")
-		siteInstance.addToFolders(internalFolderInstance)
 		siteInstance.addToContentTypes(homepageInstance)
 		siteInstance.addToContentTypes(standardInstance)
 		
 		//create site and content type including all related content type objects
 		//TODO Add try...catch block to handle timeouts and connection exceptions		
 		CascadeSite site = siteInstance.createRemoteSite()
-		CascadeFolder[] internalFolder = internalFolderInstance.createRemoteFolder(site, site.getRootFolderId()) 
+		CascadeFolder[] internalFolder = internalFolderInstance.createRemoteFolder(site, site.getRootFolderId())
+
 		homepageInstance.createRemoteContentType(site, internalFolder)
 		standardInstance.createRemoteContentType(site, internalFolder)
+		
+		siteInstance.folders.each() {
+			def folderInstance = new Folder(name: it.name)
+			folderInstance.createRemoteFolder(site, site.getRootFolderId())
+			
+		}
+		//adding this one since it's a special kind of folder
+		siteInstance.addToFolders(internalFolderInstance)
 		
 		//		TODO create Scaffold domain type for folders, index pages
 		//      TODO provide for .jar files that can be dropped in and consumed for creating default XSLT and Velocity formats
