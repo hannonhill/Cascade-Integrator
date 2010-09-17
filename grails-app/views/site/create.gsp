@@ -9,6 +9,7 @@
         <title><g:message code="default.create.label" args="[entityName]" /></title>
          <script type="text/javascript">
 			var i = 0;
+			var j = 0;
         
         	function addFolder() {
 				var input = new Element("input", {name : "folders[" + i + "].name", type : "text", style : "display: block"});
@@ -17,6 +18,15 @@
 				} );
 				i++;
         	}
+
+        	function addContentType() {
+				var input = new Element("input", {name : "contentTypes[" + j + "].name", type : "text", style : "display: block"});
+				$("newct").insert ({
+					"bottom" : 	input
+				} );
+				j++;
+        	}
+        	
         </script>
     </head>
     <body>
@@ -50,6 +60,9 @@
                         
                         </tbody>
                     </table>
+                    <div id="newct">
+                    	<input type="button" value="Add Content Type" onclick="addContentType();" />
+                    </div>
                     <div id="newfolders">
                     	<input type="button" value="Add Folder" onclick="addFolder();" />
                     </div>
