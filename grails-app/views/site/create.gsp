@@ -58,6 +58,15 @@
                                 </td>
                             </tr>
                         
+                        	<tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="endpoint"><g:message code="site.endpoint.label" default="Cascade Server URL" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: siteInstance, field: 'endpoint', 'errors')}">
+                                    <g:textField name="endpoint" value="${siteInstance?.endpoint}" />
+                                </td>
+                            </tr>
+                            
                         </tbody>
                     </table>
                     <div id="newct">
