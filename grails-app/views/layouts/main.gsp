@@ -11,7 +11,7 @@
         <div id="spinner" class="spinner" style="display:none;">
             <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
         </div>
-        <div id="grailsLogo"><img src="${resource(dir:'images',file:'logo.gif')}" alt="Cascade Server" border="0" /><span style="font-size:2em;position:absolute;left:393px;top:41px"> &raquo; Integrator</span></div>
+        <div id="grailsLogo"><img src="${resource(dir:'images',file:'logo.gif')}" alt="Cascade Server" border="0" /><span style="font-size:2em;position:absolute;left:393px;top:41px"> &raquo; Integrator v.<g:meta name="app.version"></g:meta></span><br/><br/>Server JVM: ${System.getProperty('java.version')}</div>
         <g:layoutBody />
     </body>
 </html>
