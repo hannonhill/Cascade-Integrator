@@ -7,6 +7,7 @@ import com.hannonhill.www.ws.ns.AssetOperationService.ContentType as CascadeCont
 class SiteController {
 	
 	def scaffold = true
+	def authenticationService
 	
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	
@@ -49,6 +50,10 @@ class SiteController {
 			def folder = folderInstance.createRemoteFolder(site, site.getRootFolderId())
 			standardInstance.createRemotePage(standard, 'index', folder[0].getId())
 		}
+		
+		//unset the authentication instance variables so that a different endpoint may be used for the next site created
+		authenticationService.unsetAuthentication()
+		
 		//adding this one since it's a special kind of folder
 		siteInstance.addToFolders(internalFolderInstance)
 		siteInstance.addToContentTypes(homepageInstance)

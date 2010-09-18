@@ -11,7 +11,7 @@ class AuthenticationService {
 	Authentication authentication
 	AssetOperationHandler handler
 	
-	Authentication getAuthentication(user, password) { //decided to remove the username and password parameters in favor of a single hardcoded pair
+	Authentication getAuthentication(user, password) {
 		if(this.authentication == null) {
 			Authentication authentication = new Authentication()
 			authentication.setUsername(user)
@@ -32,5 +32,10 @@ class AuthenticationService {
 		}		
 		
 		return this.handler
+	}
+	
+	void unsetAuthentication() {
+		this.authentication = null
+		this.handler = null
 	}
 }
