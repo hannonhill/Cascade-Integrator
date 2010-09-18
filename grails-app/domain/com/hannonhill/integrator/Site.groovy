@@ -15,6 +15,8 @@ class Site {
 	String name
 	String wsId
 	String endpoint
+	String username
+	String password
 	InternalCmsAssets internalCmsAssets
 	
 	String toString() {
@@ -26,13 +28,13 @@ class Site {
 		internalCmsAssets(nullable: true)
 	}
 	
-	void setUpWS(endpoint) {
-		this.authorization = authenticationService.getAuthentication()
-		this.handler = authenticationService.getHandler(endpoint)
+	void setUpWS() {
+		this.authorization = authenticationService.getAuthentication(this.username, this.password)
+		this.handler = authenticationService.getHandler(this.endpoint)
 	}
 	
 	CascadeSite createRemoteSite() {
-		this.setUpWS(endpoint)
+		this.setUpWS()
 		siteService.createRemoteSite(this)
 	}
 }

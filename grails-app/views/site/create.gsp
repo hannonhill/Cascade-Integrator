@@ -67,6 +67,24 @@
                                 </td>
                             </tr>
                             
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="username"><g:message code="site.username.label" default="User Name" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: siteInstance, field: 'username', 'errors')}">
+                                    <g:textField name="username" value="${siteInstance?.username}" />
+                                </td>
+                            </tr>
+                            
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="password"><g:message code="site.password.label" default="Password" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: siteInstance, field: 'password', 'errors')}">
+                                    <g:passwordField name="password" value="${siteInstance?.password}" />
+                                </td>
+                            </tr>
+                            
                         </tbody>
                     </table>
                     <div id="newct">
