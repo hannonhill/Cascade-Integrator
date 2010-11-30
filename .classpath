@@ -11,11 +11,17 @@
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.springsource.sts.grails.core.CLASSPATH_CONTAINER"/>
-	<classpathentry kind="lib" path="/Applications/springsource/sts-2.3.2.RELEASE/plugins/org.apache.axis_1.4.0.v200905122109/lib/axis.jar"/>
-	<classpathentry kind="lib" path="/Applications/springsource/sts-2.3.2.RELEASE/plugins/org.apache.commons.discovery_0.2.0.v200905122109/lib/commons-discovery-0.2.jar"/>
-	<classpathentry kind="lib" path="/Applications/springsource/sts-2.3.2.RELEASE/plugins/javax.xml.rpc_1.1.0.v200905122109/lib/jaxrpc.jar"/>
-	<classpathentry kind="lib" path="/Applications/springsource/sts-2.3.2.RELEASE/plugins/javax.xml.soap_1.2.0.v200905122109/lib/saaj.jar"/>
-	<classpathentry kind="lib" path="/Applications/springsource/sts-2.3.2.RELEASE/plugins/javax.wsdl_1.6.2.v200806030405.jar"/>
-	<classpathentry kind="lib" path="/Applications/springsource/sts-2.3.2.RELEASE/plugins/org.apache.commons.logging_1.0.4.v200904062259.jar"/>
+	<classpathentry kind="lib" path="lib/axis.jar"/>
+	<classpathentry kind="lib" path="lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="lib/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="lib/javax.wsdl_1.6.2.v201005080631.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.commons.logging_1.0.4.v200904062259.jar"/>
+	<classpathentry kind="lib" path="lib/saaj.jar"/>
+	<classpathentry kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry kind="src" path="tomcat-1.3.5-src-groovy">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="web-app/WEB-INF/classes"/>
 </classpath>
