@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="Cascade-Integrator">
+        <wb-resource deploy-path="/" source-path="/tomcat-1.3.5-src-groovy"/>
+    </wb-module>
+</project-modules>
